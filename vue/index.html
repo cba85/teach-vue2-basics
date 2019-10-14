@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <style>
+        .border-red {
+            border: 2px solid red;
+        }
+
+        .border-green {
+            border: 2px solid green;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+
+        <h1>{{ title }}</h1>
+
+        <br>
+
+        <!-- Model -->
+        <form>
+            <input type="text" v-model="title">
+        </form>
+
+        <br>
+
+        <!-- If -->
+        <!-- No render -->
+        <div v-if="count == 1">
+            1 object
+        </div>
+        <div v-if="count > 1">
+            Many objects
+        </div>
+        <div v-else>
+            No object
+        </div>
+
+        <br>
+
+        <!-- Show-->
+        <!-- Render with display: none -->
+        <div v-show="count > 0">
+            The are objects
+        </div>
+
+        <br>
+
+        <!-- Bind -->
+        <!-- v-bind: or  :-->
+        Sign up
+        <p>{{ email }}</p>
+        <p v-text="email"></p>
+        <p v-html="email"></p>
+        <p v-once="email"></p>
+        <br>
+        <input type="text" v-model="email" :class="[email.length  < 2 ? 'border-red' : 'border-green']">
+        <br>
+        <button onclick="alert('Signed up!')" v-bind:disabled="email.length < 2">Submit</button>
+
+        <br>
+
+        <!-- Loop -->
+        <ul>
+            <li v-for="user in users">{{ user }}</li>
+        </ul>
+
+        <!-- Filters -->
+        <ul>
+            <li v-for="product in products">{{ product.name | capitalize }}</li>
+        </ul>
+
+        <p>{{ respect }}</p>
+
+        <!-- On -->
+        <!-- v-on: or @ -->
+        <input type="text" v-model="newUser" v-on:keyup.enter="addUser">
+        <button v-on:click.prevent.stop="addUser">Add</button>
+
+    </div>
+
+    <script>
+        let app = new Vue({
+            el: '#app',
+            data: {
+                title: "Title by vue",
+                count: 0,
+                email: 'hello@fre.fr',
+                users: ['Clément', 'Tomy', 'Jacques'],
+                products : [
+                    {name: "Object 1"},
+                    {name: "Object 2"}
+                ],
+                newUser: "",
+                newProduct: ""
+            },
+            methods: {
+                addUser: function() {
+                    this.users.push(this.newUser)
+                    this.newUser = ""
+                },
+                addProduct: function() {
+                    this.products({ name: this.newProduct})
+                }
+            },
+            filters: {
+                capitalize: function (value) {
+                    return value.toUpperCase()
+                }
+            },
+            computed: {
+                respect: function () {
+                    if (this.newUser.length > 1) {
+                        return "M. " + this.newUser
+                    }
+                }
+            },
+            // https://fr.vuejs.org/v2/guide/instance.html
+            created: function() {
+                console.log('Created')
+            },
+            mounted: function() {
+                console.log('Mounted')
+            },
+            updated: function () {
+                console.log('Updated')
+            },
+            destroyed: function () {
+                console.log('Destroyed')
+            }
+        });
+
+        setTimeout(() => {
+            app.$destroy();
+        }, 2000);
+    </script>
+</body>
+</html>
